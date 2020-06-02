@@ -1,24 +1,24 @@
 //Delcare variables
 var score = 0;
-var timeLeft = 0;
+var timeLeft = 75;
 var timer;
-var currentQuestion = -1;
 
-//arrray of the questions, avaialble choices, and answers     
+
+//arrray questions- titles, choices, and answers     
 var questions = [{
-  title: "Which of the following function of an array object adds one or more elements to the front of an array and returns the new length of the array?",
-  choices: ["unshift( )", "sort( )", "splice( )", "toString( )"],
-  answer: "unshift( )"
+  title: "String values must be enclosed within ________ when being assigned to variables",
+  choices: ["Commas", "Quotes", "Parenthesis", "Periods"],
+  answer: "Quotes"
 },
 {
-  title: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array?",
-  choices: ["last( )", "put( )", "push( )", "pop( )"],
-  answer: "push( )"
+  title: "Commonly used Data Types do NOT Include:",
+  choices: ["numbers", "strings", "alerts", "booleans"],
+  answer: "alerts"
 },
 {
-  title: " Which built-in method returns the characters in a string beginning at the specified location?",
-  choices: ["substr( )", "getSubstring( )", "slice( )", "None of the above."],
-  answer: "substr( )"
+  title: " Arrays in JavaScript can be used to store ________.",
+  choices: ["Numbers", "Strings", "Other Arrays", "All of the above"],
+  answer: "All of the above"
 },
 {
   title: "Which of the following function of an array object adds and/or removes elements from an array?",
@@ -33,19 +33,134 @@ var questions = [{
 ]
 
 //Click start button to start timer and quiz
-function start() {
-  
+function startBtn() {
   timeLeft = 75;
   document.getElementById("timeLeft").innerHTML = timeLeft;
+  // console.log(timeLeft);
 
   timer = setInterval(function () {
     timeLeft--;
     document.getElementById("timeLeft").innerHTML = timeLeft;
-    if (timeLeft <= 0) {
+    // timeLeft is 0, clear interval and endgame 
+    if (timeLeft === 0) {
       clearInterval(timer);
       endGame();
     }
   }, 1000);
 
-  next();
+  nextQtn();
+}
+
+// set initial questions array index before ++
+var currentQuestion = -1;
+// loops thru questions array 
+function nextQtn() {
+  currentQuestion++;
+  // check to see if all questions been asked
+  if (currentQuestion === questions.length) {
+    endGame();
+    return;
+  }
+  // var to hold arr questions.title 
+  var quizContent = "<h2>" + questions[currentQuestion].title + "</h2>"
+
+  // loop through questions choices 
+  for (var i = 0; i < questions[currentQuestion].choices.length; i++) {
+    
+    var buttonCode = "<button onclick=questions[currentQuestion].choice[i]";
+    var answerCode = questions[currentQuestion].answer;
+    // console.log('buttoncode is ' + buttonCode);
+    // console.log('answercode is ' + answerCode);
+
+      if (buttonCode == answerCode) {
+      buttonCode = "<button onclick=correct()>";
+      console.log('buttoncode is ' + buttonCode);
+    } else {
+      buttonCode = "<button onclick=incorrect()>";
+      console.log('buttoncode is ' + buttonCode);
+    }
+
+    quizContent += buttonCode
+  }
+
+  document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+//end game to output score and name
+function endGame() {
+  clearInterval(timer);
+
+  var quizResults = `
+  <h2>Finished!</h2>
+  <h3>You got ` + score / 20 + ` questions correct. </h3>
+  <h3>That is a score ` + score + ` out of 100.</h3>
+  <input type="text" id="name" placeholder="Your Initials"> 
+  <button onclick="setScore()">Set score!</button><br>
+  <button onclick="resetGame()">Play Again!</button>
+  `;
+
+  document.getElementById("quizBody").innerHTML = quizResults;
+}
+
+//store the scores on local storage
+function setScore() {
+  localStorage.setItem("highscore", score);
+  localStorage.setItem("highscoreName", document.getElementById('name').value);
+  getScore();
+}
+
+function getScore() {
+  var quizContent = `
+  <h2>` + localStorage.getItem("highscoreName") + `'s last saved score is:</h2>
+  <h1>` + localStorage.getItem("highscore") + `</h1><br> 
+  
+  <button onclick="clearScore()">Clear score!</button><button onclick="resetGame()">Play Again!</button>
+  
+  `;
+
+  document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+
+//clears the score name and value in the local storage if the user selects 'clear score'
+function clearScore() {
+  localStorage.setItem("highscore", "");
+  localStorage.setItem("highscoreName", "");
+
+  resetGame();
+}
+
+//reset the game 
+function resetGame() {
+  clearInterval(timer);
+  score = 0;
+  currentQuestion = -1;
+  timeLeft = 0;
+  timer = null;
+
+  document.getElementById("timeLeft").innerHTML = timeLeft;
+
+  var quizContent = `
+  <h1>
+      Coding Quiz!
+  </h1>
+  <h3>
+      Click start to play!   
+  </h3>
+  <button onclick="startBtn()">Start!</button>`;
+
+  document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+//deduct 10seconds from the timer if user chooses an incorrect answer
+function incorrect() {
+  timeLeft -= 10;
+  console.log('timeleft incorrect' + timeLeft);
+  nextQtn();
+}
+
+//increases the score by 20points if the user chooses the correct answer
+function correct() {
+  score += 20;
+  nextQtn();
 }

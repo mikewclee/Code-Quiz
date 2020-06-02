@@ -22,13 +22,7 @@ WHEN the game is over
 THEN I can save my initials and score
 ```
 
-The following animation demonstrates the application functionality:
-![code quiz](./Assets/04-web-apis-homework-demo.gif)
 
-### Review
-
-You are required to submit the following for review:
-
-* The URL of the functional, deployed application.
-
-* The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
+The following is screenshot of app:
+![code quiz](assets/CodeQuizApp.JPG)
+![code quiz](assets/CodeQuizApp2.JPG)
