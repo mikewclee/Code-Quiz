@@ -59,6 +59,17 @@ button:hover {
     transition-duration: 0.4s;
     background-color: rgb(131, 211, 12);
 }
+
+#answerResponse {
+    font-style: italic;
+    color: grey;
+    font-size: 30px;
+    /* padding-left: 15%; */
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+
+}
 @media (max-width: 690px) {
     .btn {
       font-size: 1rem;
